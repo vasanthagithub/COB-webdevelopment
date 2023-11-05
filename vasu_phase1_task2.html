@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> To-Do List </title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            /*background-image: url('https://cdn.wallpapersafari.com/82/75/u9UeFz.jpg');*/
+
+            text-align: center;
+        }
+
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 5px;
+            border: 1px solid #ccc;
+            margin: 5px 0;
+            border-radius: 5px;
+        }
+
+        .task-number {
+            width: 20px;
+            text-align: center;
+        }
+
+        .task-text {
+            flex: 1;
+        }
+
+        .button-container {
+            display: flex;
+            align-items: center;
+        }
+
+        .remove-button {
+            background-color: red;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .completed-button {
+            background-color: green;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #remove-all {
+            background-color: #ff5733;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Vasantha's To-Do List</h1>
+        <input type="text" id="taskInput" placeholder="Add a new task">
+        <ul id="taskList">
+            <li>
+                <div class="task-number"><strong>S.No</strong></div>
+                <div class="task-text"><strong>Tasks</strong></div>
+            </li>
+        </ul>
+        <button id="remove-all">Remove All</button>
+    </div>
+
+    <script>
+        const taskInput = document.getElementById('taskInput');
+        const taskList = document.getElementById('taskList');
+        const removeAllButton = document.getElementById('remove-all');
+        let taskCounter = 1;
+
+        taskInput.addEventListener('keypress', function (e) {
+            if (e.key === 'Enter' && taskInput.value.trim() !== '') {
+                addTask(taskInput.value);
+                taskInput.value = '';
+            }
+        });
+
+        function addTask(taskText) {
+            const taskItem = document.createElement('li');
+            const taskNumber = document.createElement('div');
+            taskNumber.classList.add('task-number');
+            taskNumber.textContent = taskCounter;
+            taskCounter++;
+
+            const taskTextDiv = document.createElement('div');
+            taskTextDiv.classList.add('task-text');
+            taskTextDiv.textContent = taskText;
+
+            const buttonContainer = document.createElement('div');
+            buttonContainer.classList.add('button-container');
+
+            const removeButton = document.createElement('button');
+            removeButton.classList.add('remove-button');
+            removeButton.textContent = 'Remove';
+            removeButton.addEventListener('click', () => {
+                taskList.removeChild(taskItem);
+            });
+
+            const completedButton = document.createElement('button');
+            completedButton.classList.add('completed-button');
+            completedButton.textContent = 'Completed';
+            completedButton.addEventListener('click', () => {
+                taskTextDiv.style.textDecoration = 'line-through';
+                taskTextDiv.style.backgroundColor = 'lightgray';
+            });
+
+            buttonContainer.appendChild(removeButton);
+            buttonContainer.appendChild(completedButton);
+
+            taskItem.appendChild(taskNumber);
+            taskItem.appendChild(taskTextDiv);
+            taskItem.appendChild(buttonContainer);
+
+            taskList.appendChild(taskItem);
+        }
+
+        removeAllButton.addEventListener('click', function () {
+            while (taskList.firstChild) {
+                taskList.removeChild(taskList.firstChild);
+            }
+            taskCounter = 1;
+        });
+    </script>
+</body>
+</html>
