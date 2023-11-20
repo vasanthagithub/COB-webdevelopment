@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Link Shortener</title>
+    <style>
+        
+           body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background: linear-gradient(135deg, #3498db, #8e44ad);
+            background-image: url('https://img.freepik.com/premium-photo/green-turquoise-background-with-orange-light_32525-131.jpg?size=626&ext=jpg&ga=GA1.1.1058581455.1699943743&semt=sph');
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-size: cover;
+            color: #fff;
+        }
+
+        .container {
+            text-align: center;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            max-width: 400px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        h2 {
+            color: #3498db;
+        }
+
+        #urlInput {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        #shortenButton {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #27ae60;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
+        }
+
+        #shortenButton:hover {
+            background-color: #219e54;
+        }
+
+        #shortenedUrlBox {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background-color: #f9f9f9;
+        }
+
+        #shortenedUrl {
+            margin-top: 10px;
+            font-size: 18px;
+            word-wrap: break-word;
+            cursor: pointer;
+            color: #3498db;
+            text-decoration: underline;
+        }
+
+        #shortenedUrl:hover {
+            color: #217dbb;
+        }
+
+          /* Your CSS styles remain unchanged */
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Link Shortener</h2>
+        <input type="url" id="urlInput" placeholder="Enter URL to shorten">
+        <button onclick="shortenUrl()" id="shortenButton">Shorten</button>
+        <div id="shortenedUrlBox">
+            <div id="shortenedUrl" onclick="redirectToOriginalUrl()"></div>
+        </div>
+    </div>
+
+    <script>
+        const shortnBtn = document.getElementById('shortenButton');
+        shortnBtn.addEventListener('click', shortenUrl);
+
+        function shortenUrl() {
+            var originalUrl = document.getElementById('urlInput').value;
+            var apiUrl = 'https://tinyurl.com/api-create.php?url=' + encodeURIComponent(originalUrl);
+            var shortenedUrlElement = document.getElementById('shortenedUrl');
+
+            fetch(apiUrl)
+                .then((response) => response.text())
+                .then((data) => {
+                    shortenedUrlElement.innerHTML = "Shortened URL: <span id='urlLink'>" + data + "</span>";
+                    sessionStorage.setItem(data, originalUrl); // Storing shortened URL with original URL in sessionStorage
+                })
+                .catch((error) => {
+                    shortenedUrlElement.innerHTML = 'Error: Unable to Shorten URL!';
+                    console.error('Error:', error);
+                });
+        }
+
+        function redirectToOriginalUrl() {
+            var shortenedUrl = document.getElementById('urlLink').innerText;
+            var originalUrl = sessionStorage.getItem(shortenedUrl);
+
+            if (originalUrl) {
+                window.location.href = originalUrl; // Redirect to the original URL
+            } else {
+                alert("Original URL not found");
+            }
+        }
+    </script>
+</body>
+</html>
